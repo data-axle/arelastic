@@ -18,6 +18,26 @@ class Arelastic::Queries::BoolTest < Minitest::Test
   #   assert_equal expected, filtered.as_elastic
   # end
 
+  def test_as_elastic_with_nested_is_idempotent
+    nested1 = Arelastic::Queries::Nested.new('contacts',
+      {
+        'terms' => {
+          'contacts.title_codes' => { 'query' => ['1'] }
+        }
+      }
+    )
+    nested2 = Arelastic::Queries::Nested.new('contacts',
+      {
+        'terms' => {
+          'contacts.first_name' => { 'query' => ['Matthew'] }
+        }
+      }
+    )
+    query = Arelastic::Queries::Bool.new(must: [nested1, nested2])
+
+    assert_equal query.as_elastic, query.as_elastic
+  end
+
   def test_as_elastic
     bool = Arelastic::Queries::Bool.new(
       must: {
