@@ -4,4 +4,3 @@ gemspec
 gem 'rake'
 gem 'minitest'
 gem 'simplecov', require: false
-gem 'debug'
