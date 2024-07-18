@@ -35,8 +35,9 @@ module Arelastic
         mergeable, other = expr.partition { |el| el.is_a?(klass) }
         merged = mergeable.group_by(&merge_test_method).flat_map do |_, group|
           if group.size > 1
-            group.first.instance_variable_set("@query", self.class.new(clause => group.map(&:query)))
-            group.first
+            item = group.first.dup
+            item.instance_variable_set("@query", self.class.new(clause => group.map(&:query)))
+            item
           else
             group
           end
